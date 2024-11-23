@@ -1,7 +1,6 @@
 import java.util.Scanner;
 import java.time.LocalDate;
 import java.time.Period;
-import java.util.regex.Pattern;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
@@ -55,7 +54,12 @@ public class UserInfo {
     }
     // Метод для проверки, что в ФИО не содержатся недопустимые символы
     private static boolean isValidFullName(String fullName) {
-        return Pattern.matches("[а-яА-Я\\s]+", fullName);
+        for (char c : fullName.toCharArray()) {
+            if (!Character.isWhitespace(c) && (c < 'а' || c > 'я') && (c < 'А' || c > 'Я')) {
+                return false;
+            }
+        }
+        return true;
     }
     // Метод для парсинга и проверки даты рождения
     private static LocalDate parseAndValidateDate(String str) {
@@ -71,12 +75,10 @@ public class UserInfo {
                 throw new IllegalArgumentException("Неверный формат даты. Используйте дд.мм.гггг или дд/мм/гггг");
             }
         }
-
         // Проверяем на существование даты
         if (date.getDayOfMonth() != Integer.parseInt(str.split("[./]")[0])) {
             throw new IllegalArgumentException("Нереальная дата: " + str);
         }
-
         return date;
     }
     // Метод для генерации инициалов
@@ -99,14 +101,15 @@ public class UserInfo {
     }
     // Метод для получения окончания (последнего слова) для вывода возраста
     private static String getAgeEnd(int age) {
+        String[] endings = {"лет", "год", "года"};
         int lastDigit = age % 10;
         int lastTwoDigits = age % 100;
         if (lastDigit == 1 && lastTwoDigits != 11) {
-            return "год";
+            return endings[1];
         } else if (lastDigit >= 2 && lastDigit <= 4 && (lastTwoDigits < 12 || lastTwoDigits > 14)) {
-            return "года";
+            return endings[2];
         } else {
-            return "лет";
+            return endings[0];
         }
     }
 }
