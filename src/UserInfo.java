@@ -87,9 +87,9 @@ public class UserInfo {
     }
     // Метод для получения пола по окончанию отчества
     private static String getGender(String middleName) {
-        if (middleName.toLowerCase().endsWith("вич")) {
+        if (middleName.toLowerCase().endsWith("ич")) {
             return "Мужской";
-        } else if (middleName.toLowerCase().endsWith("вна")) {
+        } else if (middleName.toLowerCase().endsWith("на")) {
             return "Женский";
         } else {
             return "Не удалось определить.";
